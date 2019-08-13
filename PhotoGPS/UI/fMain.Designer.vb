@@ -99,8 +99,10 @@ Partial Class fMain
         Dim _s5l3 As System.Windows.Forms.Label
         Dim _s5s3 As System.Windows.Forms.Splitter
         Dim _s5RightRight As System.Windows.Forms.Panel
-        Dim _s5ch2 As System.Windows.Forms.ColumnHeader
+        Dim _s5ch4 As System.Windows.Forms.ColumnHeader
         Dim _s5l4 As System.Windows.Forms.Label
+        Dim _s5tsRightRight As System.Windows.Forms.ToolStrip
+        Dim _s5tsl1 As System.Windows.Forms.ToolStripMenuItem
         Dim s2 As System.Windows.Forms.Splitter
         Dim _s5Left As System.Windows.Forms.Panel
         Dim _s5l2 As System.Windows.Forms.Label
@@ -111,7 +113,6 @@ Partial Class fMain
         Me._s1chFolder = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me._s1chFullPath = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me._s1chRecursive = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me._s1ftvBrowser = New PhotoGPS.FolderTreeview()
         Me._s1tstbWorkingFolderTB = New System.Windows.Forms.ToolStripTextBox()
         Me._s1tsbBrowse = New System.Windows.Forms.ToolStripButton()
         Me._s1tsbAddFolder = New System.Windows.Forms.ToolStripButton()
@@ -135,7 +136,6 @@ Partial Class fMain
         Me._s6cDeleteEmpty = New System.Windows.Forms.CheckBox()
         Me._s6bBrowse = New System.Windows.Forms.Button()
         Me._s6tbDestFolder = New System.Windows.Forms.TextBox()
-        Me._s5Preview = New PhotoGPS.FilePreviewControl()
         Me._s5tsbPrevious = New System.Windows.Forms.ToolStripButton()
         Me._s5tsbNext = New System.Windows.Forms.ToolStripButton()
         Me._s5tsbAssign = New System.Windows.Forms.ToolStripButton()
@@ -143,7 +143,12 @@ Partial Class fMain
         Me._s5lbJobFiles = New System.Windows.Forms.ListBox()
         Me._s5lvJobs = New System.Windows.Forms.ListView()
         Me._s5ch1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me._s5ch2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me._s5ch3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me._s5tbJobSearch = New System.Windows.Forms.TextBox()
+        Me._s5tsbAddJob = New System.Windows.Forms.ToolStripDropDownButton()
+        Me._s5tstbAddJob = New System.Windows.Forms.ToolStripTextBox()
+        Me._s5tsbRemoveJob = New System.Windows.Forms.ToolStripButton()
         Me._s5lbFolderFiles = New System.Windows.Forms.ListBox()
         Me._s5lSearchSF = New System.Windows.Forms.ToolStripLabel()
         Me._s1Page = New System.Windows.Forms.Panel()
@@ -173,6 +178,8 @@ Partial Class fMain
         Me._s5Page = New System.Windows.Forms.Panel()
         Me._s5LeftLeft = New System.Windows.Forms.Panel()
         Me._s5lbFolders = New System.Windows.Forms.ListBox()
+        Me._s5Preview = New PhotoGPS.FilePreviewControl()
+        Me._s1ftvBrowser = New PhotoGPS.FolderTreeview()
         Me._s0ProgressStatusbar = New PhotoGPS.ProgressStatusBar()
         _s1pMainWorkingArea = New System.Windows.Forms.Panel()
         _s1splitter = New System.Windows.Forms.Splitter()
@@ -207,8 +214,10 @@ Partial Class fMain
         _s5l3 = New System.Windows.Forms.Label()
         _s5s3 = New System.Windows.Forms.Splitter()
         _s5RightRight = New System.Windows.Forms.Panel()
-        _s5ch2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        _s5ch4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         _s5l4 = New System.Windows.Forms.Label()
+        _s5tsRightRight = New System.Windows.Forms.ToolStrip()
+        _s5tsl1 = New System.Windows.Forms.ToolStripMenuItem()
         s2 = New System.Windows.Forms.Splitter()
         _s5Left = New System.Windows.Forms.Panel()
         _s5l2 = New System.Windows.Forms.Label()
@@ -229,6 +238,7 @@ Partial Class fMain
         _s5tsPreview.SuspendLayout()
         _s5Right.SuspendLayout()
         _s5RightRight.SuspendLayout()
+        _s5tsRightRight.SuspendLayout()
         _s5Left.SuspendLayout()
         _s5tsLeftLeft.SuspendLayout()
         Me._s1Page.SuspendLayout()
@@ -288,18 +298,6 @@ Partial Class fMain
         _s1splitter.Size = New System.Drawing.Size(3, 305)
         _s1splitter.TabIndex = 2
         _s1splitter.TabStop = False
-        '
-        '_s1ftvBrowser
-        '
-        Me._s1ftvBrowser.BackColor = System.Drawing.SystemColors.Window
-        Me._s1ftvBrowser.Dock = System.Windows.Forms.DockStyle.Left
-        Me._s1ftvBrowser.Folder = Nothing
-        Me._s1ftvBrowser.FullRowSelect = True
-        Me._s1ftvBrowser.HideSelection = False
-        Me._s1ftvBrowser.Location = New System.Drawing.Point(0, 0)
-        Me._s1ftvBrowser.Name = "_s1ftvBrowser"
-        Me._s1ftvBrowser.Size = New System.Drawing.Size(259, 305)
-        Me._s1ftvBrowser.TabIndex = 0
         '
         '_s1tsTop
         '
@@ -694,18 +692,8 @@ Partial Class fMain
         _s5pCenter.Dock = System.Windows.Forms.DockStyle.Fill
         _s5pCenter.Location = New System.Drawing.Point(276, 0)
         _s5pCenter.Name = "_s5pCenter"
-        _s5pCenter.Size = New System.Drawing.Size(324, 361)
+        _s5pCenter.Size = New System.Drawing.Size(238, 361)
         _s5pCenter.TabIndex = 8
-        '
-        '_s5Preview
-        '
-        Me._s5Preview.Dock = System.Windows.Forms.DockStyle.Fill
-        Me._s5Preview.File = Nothing
-        Me._s5Preview.Location = New System.Drawing.Point(0, 13)
-        Me._s5Preview.Name = "_s5Preview"
-        Me._s5Preview.Size = New System.Drawing.Size(324, 298)
-        Me._s5Preview.TabIndex = 3
-        Me._s5Preview.Text = "_s5FilePreviewControl1"
         '
         '_s5tsPreviewControls
         '
@@ -714,7 +702,7 @@ Partial Class fMain
         _s5tsPreviewControls.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me._s5tsbPrevious, Me._s5tsbNext})
         _s5tsPreviewControls.Location = New System.Drawing.Point(0, 311)
         _s5tsPreviewControls.Name = "_s5tsPreviewControls"
-        _s5tsPreviewControls.Size = New System.Drawing.Size(324, 25)
+        _s5tsPreviewControls.Size = New System.Drawing.Size(238, 25)
         _s5tsPreviewControls.TabIndex = 4
         _s5tsPreviewControls.Text = "ToolStrip1"
         '
@@ -756,7 +744,7 @@ Partial Class fMain
         _s5tsPreview.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me._s5tsbAssign, Me._s5tsbUnassign})
         _s5tsPreview.Location = New System.Drawing.Point(0, 336)
         _s5tsPreview.Name = "_s5tsPreview"
-        _s5tsPreview.Size = New System.Drawing.Size(324, 25)
+        _s5tsPreview.Size = New System.Drawing.Size(238, 25)
         _s5tsPreview.TabIndex = 0
         _s5tsPreview.Text = "ToolStrip1"
         '
@@ -782,7 +770,7 @@ Partial Class fMain
         '_s5s4
         '
         _s5s4.Dock = System.Windows.Forms.DockStyle.Right
-        _s5s4.Location = New System.Drawing.Point(600, 0)
+        _s5s4.Location = New System.Drawing.Point(514, 0)
         _s5s4.Name = "_s5s4"
         _s5s4.Size = New System.Drawing.Size(3, 361)
         _s5s4.TabIndex = 7
@@ -793,7 +781,7 @@ Partial Class fMain
         _s5Right.Controls.Add(Me._s5lbJobFiles)
         _s5Right.Controls.Add(_s5l3)
         _s5Right.Dock = System.Windows.Forms.DockStyle.Right
-        _s5Right.Location = New System.Drawing.Point(603, 0)
+        _s5Right.Location = New System.Drawing.Point(517, 0)
         _s5Right.Name = "_s5Right"
         _s5Right.Size = New System.Drawing.Size(145, 361)
         _s5Right.TabIndex = 6
@@ -822,7 +810,7 @@ Partial Class fMain
         '_s5s3
         '
         _s5s3.Dock = System.Windows.Forms.DockStyle.Right
-        _s5s3.Location = New System.Drawing.Point(748, 0)
+        _s5s3.Location = New System.Drawing.Point(662, 0)
         _s5s3.Name = "_s5s3"
         _s5s3.Size = New System.Drawing.Size(3, 361)
         _s5s3.TabIndex = 5
@@ -833,21 +821,22 @@ Partial Class fMain
         _s5RightRight.Controls.Add(Me._s5lvJobs)
         _s5RightRight.Controls.Add(Me._s5tbJobSearch)
         _s5RightRight.Controls.Add(_s5l4)
+        _s5RightRight.Controls.Add(_s5tsRightRight)
         _s5RightRight.Dock = System.Windows.Forms.DockStyle.Right
-        _s5RightRight.Location = New System.Drawing.Point(751, 0)
+        _s5RightRight.Location = New System.Drawing.Point(665, 0)
         _s5RightRight.Name = "_s5RightRight"
-        _s5RightRight.Size = New System.Drawing.Size(180, 361)
+        _s5RightRight.Size = New System.Drawing.Size(266, 361)
         _s5RightRight.TabIndex = 4
         '
         '_s5lvJobs
         '
-        Me._s5lvJobs.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me._s5ch1, _s5ch2})
+        Me._s5lvJobs.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me._s5ch1, Me._s5ch2, Me._s5ch3, _s5ch4})
         Me._s5lvJobs.Dock = System.Windows.Forms.DockStyle.Fill
         Me._s5lvJobs.FullRowSelect = True
         Me._s5lvJobs.HideSelection = False
         Me._s5lvJobs.Location = New System.Drawing.Point(0, 33)
         Me._s5lvJobs.Name = "_s5lvJobs"
-        Me._s5lvJobs.Size = New System.Drawing.Size(180, 328)
+        Me._s5lvJobs.Size = New System.Drawing.Size(266, 303)
         Me._s5lvJobs.TabIndex = 3
         Me._s5lvJobs.UseCompatibleStateImageBehavior = False
         Me._s5lvJobs.View = System.Windows.Forms.View.Details
@@ -860,8 +849,18 @@ Partial Class fMain
         '
         '_s5ch2
         '
-        _s5ch2.Text = "Photo Count"
-        _s5ch2.Width = 77
+        Me._s5ch2.Text = "Start"
+        Me._s5ch2.Width = 78
+        '
+        '_s5ch3
+        '
+        Me._s5ch3.Text = "End"
+        Me._s5ch3.Width = 79
+        '
+        '_s5ch4
+        '
+        _s5ch4.Text = "# Photos"
+        _s5ch4.Width = 57
         '
         '_s5tbJobSearch
         '
@@ -869,7 +868,7 @@ Partial Class fMain
         Me._s5tbJobSearch.Dock = System.Windows.Forms.DockStyle.Top
         Me._s5tbJobSearch.Location = New System.Drawing.Point(0, 13)
         Me._s5tbJobSearch.Name = "_s5tbJobSearch"
-        Me._s5tbJobSearch.Size = New System.Drawing.Size(180, 20)
+        Me._s5tbJobSearch.Size = New System.Drawing.Size(266, 20)
         Me._s5tbJobSearch.TabIndex = 4
         '
         '_s5l4
@@ -881,6 +880,50 @@ Partial Class fMain
         _s5l4.Size = New System.Drawing.Size(32, 13)
         _s5l4.TabIndex = 2
         _s5l4.Text = "Jobs:"
+        '
+        '_s5tsRightRight
+        '
+        _s5tsRightRight.Dock = System.Windows.Forms.DockStyle.Bottom
+        _s5tsRightRight.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        _s5tsRightRight.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me._s5tsbAddJob, Me._s5tsbRemoveJob})
+        _s5tsRightRight.Location = New System.Drawing.Point(0, 336)
+        _s5tsRightRight.Name = "_s5tsRightRight"
+        _s5tsRightRight.Size = New System.Drawing.Size(266, 25)
+        _s5tsRightRight.TabIndex = 5
+        _s5tsRightRight.Text = "ToolStrip1"
+        '
+        '_s5tsbAddJob
+        '
+        Me._s5tsbAddJob.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me._s5tsbAddJob.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {_s5tsl1, Me._s5tstbAddJob})
+        Me._s5tsbAddJob.Image = CType(resources.GetObject("_s5tsbAddJob.Image"), System.Drawing.Image)
+        Me._s5tsbAddJob.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me._s5tsbAddJob.Name = "_s5tsbAddJob"
+        Me._s5tsbAddJob.Size = New System.Drawing.Size(63, 22)
+        Me._s5tsbAddJob.Text = "Add Job"
+        '
+        '_s5tsl1
+        '
+        _s5tsl1.Enabled = False
+        _s5tsl1.Name = "_s5tsl1"
+        _s5tsl1.Size = New System.Drawing.Size(240, 22)
+        _s5tsl1.Text = "Job name:"
+        '
+        '_s5tstbAddJob
+        '
+        Me._s5tstbAddJob.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me._s5tstbAddJob.Name = "_s5tstbAddJob"
+        Me._s5tstbAddJob.Size = New System.Drawing.Size(180, 23)
+        '
+        '_s5tsbRemoveJob
+        '
+        Me._s5tsbRemoveJob.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me._s5tsbRemoveJob.Enabled = False
+        Me._s5tsbRemoveJob.Image = CType(resources.GetObject("_s5tsbRemoveJob.Image"), System.Drawing.Image)
+        Me._s5tsbRemoveJob.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me._s5tsbRemoveJob.Name = "_s5tsbRemoveJob"
+        Me._s5tsbRemoveJob.Size = New System.Drawing.Size(112, 22)
+        Me._s5tsbRemoveJob.Text = "Remove Added job"
         '
         's2
         '
@@ -1209,6 +1252,28 @@ Partial Class fMain
         Me._s5lbFolders.Size = New System.Drawing.Size(147, 323)
         Me._s5lbFolders.TabIndex = 1
         '
+        '_s5Preview
+        '
+        Me._s5Preview.Dock = System.Windows.Forms.DockStyle.Fill
+        Me._s5Preview.File = Nothing
+        Me._s5Preview.Location = New System.Drawing.Point(0, 13)
+        Me._s5Preview.Name = "_s5Preview"
+        Me._s5Preview.Size = New System.Drawing.Size(238, 298)
+        Me._s5Preview.TabIndex = 3
+        Me._s5Preview.Text = "_s5FilePreviewControl1"
+        '
+        '_s1ftvBrowser
+        '
+        Me._s1ftvBrowser.BackColor = System.Drawing.SystemColors.Window
+        Me._s1ftvBrowser.Dock = System.Windows.Forms.DockStyle.Left
+        Me._s1ftvBrowser.Folder = Nothing
+        Me._s1ftvBrowser.FullRowSelect = True
+        Me._s1ftvBrowser.HideSelection = False
+        Me._s1ftvBrowser.Location = New System.Drawing.Point(0, 0)
+        Me._s1ftvBrowser.Name = "_s1ftvBrowser"
+        Me._s1ftvBrowser.Size = New System.Drawing.Size(259, 305)
+        Me._s1ftvBrowser.TabIndex = 0
+        '
         '_s0ProgressStatusbar
         '
         Me._s0ProgressStatusbar.Location = New System.Drawing.Point(0, 384)
@@ -1258,6 +1323,8 @@ Partial Class fMain
         _s5Right.PerformLayout()
         _s5RightRight.ResumeLayout(False)
         _s5RightRight.PerformLayout()
+        _s5tsRightRight.ResumeLayout(False)
+        _s5tsRightRight.PerformLayout()
         _s5Left.ResumeLayout(False)
         _s5Left.PerformLayout()
         _s5tsLeftLeft.ResumeLayout(False)
@@ -1307,4 +1374,9 @@ Partial Class fMain
     Friend WithEvents _s5tsbNext As ToolStripButton
     Friend WithEvents _s5lSearchSF As ToolStripLabel
     Friend WithEvents _s5ch1 As ColumnHeader
+    Friend WithEvents _s5ch2 As ColumnHeader
+    Friend WithEvents _s5ch3 As ColumnHeader
+    Friend WithEvents _s5tsbRemoveJob As ToolStripButton
+    Friend WithEvents _s5tstbAddJob As ToolStripTextBox
+    Friend WithEvents _s5tsbAddJob As ToolStripDropDownButton
 End Class

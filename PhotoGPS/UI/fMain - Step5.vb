@@ -71,16 +71,21 @@ Partial Public Class fMain
             i.Photos.AddRange(p)
         Next
 
-        'update the uncorrelated files listbox
-        _s5lbFolderFiles.BeginUpdate()
-        _s5lbFolderFiles.Items.Clear()
-        _s5lbFolderFiles.Items.AddRange((From i In _s5lbFolderFiles.Items Where Not files.Contains(i)).ToArray)
-        _s5lbFolderFiles.EndUpdate()
+        ''update the uncorrelated files listbox
+        '_s5lbFolderFiles.BeginUpdate()
+        '_s5lbFolderFiles.Items.Clear()
+        '_s5lbFolderFiles.Items.AddRange((From i In _s5lbFolderFiles.Items Where Not files.Contains(i)).ToArray)
+        '_s5lbFolderFiles.EndUpdate()
 
-        'update the correlated files listbox
-        _s5lbJobFiles.BeginUpdate()
-        _s5lbJobFiles.Items.AddRange(files)
-        _s5lbJobFiles.EndUpdate()
+        ''update the correlated files listbox
+        '_s5lbJobFiles.BeginUpdate()
+        '_s5lbJobFiles.Items.AddRange(files)
+        '_s5lbJobFiles.EndUpdate()
+
+        _s5UpdateJobFiles()
+        _s5UpdateFolderFiles()
+
+        _s5RefreshFoldersAndJobs()
 
     End Sub
 
@@ -90,23 +95,28 @@ Partial Public Class fMain
     Sub _s5UnassignPhotos()
         'need a list of selected correlated photofiles
         Dim files = _s5SelectedCorrelatedFiles.ToArray
-        Dim p = From i In Project.Photos, j In files Where i.File.FullName = j.Value.FullName Select i
+        Dim p = (From i In Project.Photos, j In files Where i.File.FullName = j.Value.FullName Select i).ToList
 
         'unassociate with the selected jobs
         For Each i In _s5SelectedJobs
-            i.Photos = From j In i.Photos Where Not p.Contains(j)
+            i.Photos = (From j In i.Photos Where Not p.Contains(j)).ToList
         Next
 
-        'update the correlated files listbox
-        _s5lbJobFiles.BeginUpdate()
-        _s5lbJobFiles.Items.Clear()
-        _s5lbJobFiles.Items.AddRange((From i In _s5lbJobFiles.Items Where Not files.Contains(i)).ToArray)
-        _s5lbJobFiles.EndUpdate()
+        ''update the correlated files listbox
+        '_s5lbJobFiles.BeginUpdate()
+        '_s5lbJobFiles.Items.Clear()
+        '_s5lbJobFiles.Items.AddRange((From i In _s5lbJobFiles.Items Where Not files.Contains(i)).ToArray)
+        '_s5lbJobFiles.EndUpdate()
 
-        'update the uncorrelated files listbox
-        _s5lbFolderFiles.BeginUpdate()
-        _s5lbFolderFiles.Items.AddRange(files)
-        _s5lbFolderFiles.EndUpdate()
+        ''update the uncorrelated files listbox
+        '_s5lbFolderFiles.BeginUpdate()
+        '_s5lbFolderFiles.Items.AddRange(files)
+        '_s5lbFolderFiles.EndUpdate()
+
+        _s5UpdateJobFiles()
+        _s5UpdateFolderFiles()
+
+        _s5RefreshFoldersAndJobs()
     End Sub
 
     ''' <summary>
@@ -117,6 +127,9 @@ Partial Public Class fMain
 
         Dim files = From i In _s5SelectedJobs, j In i.Photos Select New _s5FileListEntry(Of IO.FileInfo)(j.File)
 
+        'disable the remove button if there are any jobs selected which were not manually added. Enable otherwise.
+        _s5tsbRemoveJob.Enabled = Not (From i In _s5SelectedJobs Where Not i.ExcludeFromSerialization).Count > 0
+
         _s5lbJobFiles.BeginUpdate()
         _s5lbJobFiles.Items.Clear()
 
@@ -124,56 +137,41 @@ Partial Public Class fMain
             _s5lbJobFiles.Items.Add("(No photos for this job)")
         Else
             _s5lbJobFiles.Items.AddRange(files.ToArray)
-            _s5lbJobFiles.SelectAll 'bug fix: manually selecting all items raises ListBox.SelectedIndexChanged for each new item being selected. The SelectAll extension calls SendMessage to select all items.
-            '_s5UpdatePreview() 'bug fix: when using Sendmessage to select all items, ListBox.SelectedItems is not updated. Added code to _s5UpdatePreview to use ListBox.Items instead of ListBox.SelectedItems when True is passed
-            _s5lbJobFilesSelectedAll = True
 
+            If Not _s5SuppressNextSelectAllJobFiles Then
+                _s5lbJobFiles.SelectAll 'bug fix: manually selecting all items raises ListBox.SelectedIndexChanged for each new item being selected. The SelectAll extension calls SendMessage to select all items.
+                '_s5UpdatePreview() 'bug fix: when using Sendmessage to select all items, ListBox.SelectedItems is not updated. Added code to _s5UpdatePreview to use ListBox.Items instead of ListBox.SelectedItems when True is passed
+                _s5lbJobFilesSelectedAll = True
+            Else
+                _s5lbJobFiles.SelectedIndex = 0
+                _s5SuppressNextSelectAllJobFiles = False
+            End If
             _s5lbJobFiles.Focus()
-            _s5UpdatePreview()
+                _s5UpdatePreview()
 
-        End If
+            End If
 
-        _s5lbJobFiles.EndUpdate()
+            _s5lbJobFiles.EndUpdate()
     End Sub
 
     ''' <summary>
     ''' Initializes step 4 by populating both <see cref="_s5lbFolders"/> and <see cref="_s5lvJobs"/>. Also configures the autocomplete list for <see cref="_s5tbJobSearch"/>.
     ''' </summary>
-    Private Sub _s4BeginStep5()
-        'get a list of folders where at least one photo is uncorrelated
+    Private Sub _s5BeginStep5()
+        _s5RefreshFoldersAndJobs()
 
-        _s5UncorrelatedPhotos = (From p In Project.Photos Where p.Jobs.Count = 0).ToArray
+        _s5lbFolders.SelectedIndex = 0
+        _s5lvJobs.SelectedIndices.Clear()
+        _s5lvJobs.SelectedIndices.Add(0)
 
-        Dim uncFolders = From j In (From i In _s5UncorrelatedPhotos Select i.File.Directory.FullName) Distinct Select New IO.DirectoryInfo(j)
+    End Sub
 
-        Dim folders = From j In uncFolders Order By j.Name Ascending Select New _s5FileListEntry(Of IO.DirectoryInfo)(j)
+    Private Sub _s5RefreshFoldersAndJobs()
 
-        _s5lbFolders.BeginUpdate()
-        _s5lbFolders.Items.Clear()
-
-        If folders.Count = 0 Then
-            _s5lbFolders.Items.Add("(No uncorrelated files)")
-        Else
-            _s5lbFolders.Items.AddRange(folders.ToArray)
-        End If
-        _s5lbFolders.EndUpdate()
-
-        'get a list of all jobs
-        _s5JobsLVItemsLookup = New Dictionary(Of Job, ListViewItem)
-
-        For Each i In From j In Project.Jobs Order By j.DispatchNumber Ascending
-            _s5JobsLVItemsLookup.Add(i, New ListViewItem({i.DispatchNumber, i.Photos.Count.ToString("N0")}))
-        Next
-
-        _s5lvJobs.BeginUpdate()
-        _s5JobsLVItems = (From i In _s5JobsLVItemsLookup Select i.Value).ToArray
-        _s5lvJobs.VirtualListSize = _s5JobsLVItems.Count
-        _s5lvJobs.EndUpdate()
-
-        _s5tbJobSearch.AutoCompleteMode = AutoCompleteMode.Suggest
-        _s5tbJobSearch.AutoCompleteSource = AutoCompleteSource.CustomSource
-        _s5tbJobSearch.AutoCompleteCustomSource.Clear()
-        _s5tbJobSearch.AutoCompleteCustomSource.AddRange((From i In _s5JobsLVItemsLookup Select i.Key.DispatchNumber).ToArray)
+        _s5SuppressNextSelectAllFolderFiles = True
+        _s5SuppressNextSelectAllJobFiles = True
+        _s5UpdateUncorrelatedFoldersList()
+        _s5UpdateJobsList()
 
     End Sub
 
@@ -185,6 +183,21 @@ Partial Public Class fMain
         _s5tsbPrevious.Enabled = (_s5PreviewFilesCurrentIndex > 0)
         _s5tsbNext.Enabled = (_s5PreviewFilesCurrentIndex < _s5PreviewFiles.Count - 1)
 
+    End Sub
+
+    ''' <summary>
+    ''' Called when the user presses <c>Enter</c> in <see cref="_s5tstbAddJob"/> or when <see cref="ToolStripDropDownButton.DropDownClosed"/> event is raised for <see cref="_s5tsbAddJob"/>. Creates a new instance of <see cref="Job"/> and adds it to the <see cref="Project"/>. Refreshes <see cref="_s5lbFolders"/> and <see cref="_s5lvJobs"/>.
+    ''' </summary>
+    Private Sub _s5CommitNewJob()
+        If Not String.IsNullOrWhiteSpace(_s5tstbAddJob.Text) Then
+            Project.Jobs = Project.Jobs.Append(New Job With {.DispatchNumber = _s5tstbAddJob.Text.Trim, .ExcludeFromSerialization = True})
+
+            _s5tstbAddJob.Text = ""
+
+            _s5tsbAddJob.HideDropDown()
+
+            _s5RefreshFoldersAndJobs()
+        End If
     End Sub
 
     Private Sub _s5lbFolderFiles_SelectedIndexChanged(sender As Object, e As EventArgs) Handles _s5lbFolderFiles.SelectedIndexChanged
@@ -236,6 +249,14 @@ Partial Public Class fMain
         End If
     End Sub
 
+    Private Sub _s5tsbAddJob_DropDownClosed(sender As Object, e As EventArgs) Handles _s5tsbAddJob.DropDownClosed
+        _s5CommitNewJob()
+    End Sub
+
+    Private Sub _s5tsbAddJob_DropDownOpened(sender As Object, e As EventArgs) Handles _s5tsbAddJob.DropDownOpened
+        _s5tstbAddJob.Focus()
+    End Sub
+
     Private Sub _s5tsbAssign_Click(sender As Object, e As EventArgs) Handles _s5tsbAssign.Click
         _s5AssignPhotos()
     End Sub
@@ -258,6 +279,14 @@ Partial Public Class fMain
         _s5UnassignPhotos()
     End Sub
 
+    Private Sub _s5tstbAddJob_KeyDown(sender As Object, e As KeyEventArgs) Handles _s5tstbAddJob.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            e.Handled = True
+            e.SuppressKeyPress = True
+            _s5CommitNewJob()
+        End If
+    End Sub
+
     ''' <summary>
     ''' Called when the selection changes in <see cref="_s5lbFolders"/>. Updates the contents of <see cref="_s5lbFolderFiles"/> to represent the <see cref="PhotoFile"/> instances associated with no instances of <see cref="Job"/> in <see cref="Project"/> but are contained within the folder represented by the selected item in <see cref="_s5lbFolders"/>.
     ''' </summary>
@@ -276,9 +305,17 @@ Partial Public Class fMain
                 _s5lbFolderFiles.Items.Add("***BUG: Empty uncorrelated folder***")
             Else
                 _s5lbFolderFiles.Items.AddRange(files.ToArray)
-                _s5lbFolderFiles.SelectAll() 'bug fix: manually selecting all items raises ListBox.SelectedIndexChanged for each new item being selected. The SelectAll extension calls SendMessage to select all items.
+
+                If Not _s5SuppressNextSelectAllFolderFiles Then
+                    _s5lbFolderFiles.SelectAll() 'bug fix: manually selecting all items raises ListBox.SelectedIndexChanged for each new item being selected. The SelectAll extension calls SendMessage to select all items.
+                    _s5FolderFilesSelectedAll = True
+                Else
+                    _s5lbFolderFiles.SelectedIndex = 0
+                    _s5SuppressNextSelectAllFolderFiles = False
+                End If
+
                 '_s5UpdatePreview() 'bug fix: when using Sendmessage to select all items, ListBox.SelectedItems is not updated. Added code to _s5UpdatePreview to use ListBox.Items instead of ListBox.SelectedItems when True is passed
-                _s5FolderFilesSelectedAll = True
+
                 _s5lbFolderFiles.Focus()
                 _s5UpdatePreview()
             End If
@@ -286,6 +323,40 @@ Partial Public Class fMain
             _s5lbFolderFiles.EndUpdate()
 
         End If
+    End Sub
+
+    Private _s5SuppressNextSelectAllFolderFiles As Boolean
+    Private _s5SuppressNextSelectAllJobFiles As Boolean
+
+    ''' <summary>
+    ''' Clears and refreshes the contents of <see cref="_s5lvJobs"/>.
+    ''' </summary>
+    Private Sub _s5UpdateJobsList()
+        'get a list of all jobs
+        _s5JobsLVItemsLookup = New Dictionary(Of Job, ListViewItem)
+
+        For Each i In From j In Project.Jobs Order By j.DispatchNumber Ascending
+            Dim start As String = ""
+            Dim [end] As String = ""
+
+            If i.HasDates Then
+                start = i.Start.Value.ToShortDateString
+                [end] = i.End.Value.ToShortDateString
+            End If
+
+            _s5JobsLVItemsLookup.Add(i, New ListViewItem({i.DispatchNumber, start, [end], i.Photos.Count.ToString("N0")}))
+        Next
+
+        _s5lvJobs.BeginUpdate()
+        _s5JobsLVItems = (From i In _s5JobsLVItemsLookup Select i.Value).ToArray
+        _s5lvJobs.VirtualListSize = _s5JobsLVItems.Count
+        _s5lvJobs.EndUpdate()
+
+        _s5tbJobSearch.AutoCompleteMode = AutoCompleteMode.Suggest
+        _s5tbJobSearch.AutoCompleteSource = AutoCompleteSource.CustomSource
+        _s5tbJobSearch.AutoCompleteCustomSource.Clear()
+        _s5tbJobSearch.AutoCompleteCustomSource.AddRange((From i In _s5JobsLVItemsLookup Select i.Key.DispatchNumber).ToArray)
+
     End Sub
 
     ''' <summary>
@@ -320,6 +391,46 @@ Partial Public Class fMain
         End If
 
         _s5CheckPrevNextEnabledState()
+    End Sub
+
+    ''' <summary>
+    ''' Clears and refreshes the contents of <see cref="_s5lbFolders"/>.
+    ''' </summary>
+    Private Sub _s5UpdateUncorrelatedFoldersList()
+        'get a list of folders where at least one photo is uncorrelated
+
+        _s5UncorrelatedPhotos = (From p In Project.Photos Where p.Jobs.Count = 0).ToArray
+
+        Dim uncFolders = From j In (From i In _s5UncorrelatedPhotos Select i.File.Directory.FullName) Distinct Select New IO.DirectoryInfo(j)
+
+        Dim folders = From j In uncFolders Order By j.Name Ascending Select New _s5FileListEntry(Of IO.DirectoryInfo)(j)
+
+        _s5lbFolders.BeginUpdate()
+        _s5lbFolders.Items.Clear()
+
+        If folders.Count = 0 Then
+            _s5lbFolderFiles.Items.Clear()
+            _s5lbFolders.Items.Add("(No uncorrelated files)")
+        Else
+            _s5lbFolders.Items.AddRange(folders.ToArray)
+        End If
+        _s5lbFolders.EndUpdate()
+    End Sub
+
+    ''' <summary>
+    ''' Removes the selected jobs from <see cref="Project"/> and refreshes both <see cref="_s5lbFolders"/> and <see cref="_s5lvJobs"/>.
+    ''' </summary>
+    ''' <remarks>Only removes those jobs where <see cref="Job.ExcludeFromSerialization"/> is set to <c>True</c>.</remarks>
+    Private Sub _s5RemoveManuallyAddedJob()
+        Dim q = From i In _s5SelectedJobs Where i.ExcludeFromSerialization
+
+        Project.Jobs = (From i In Project.Jobs Where Not q.Contains(i)).ToList
+
+        _s5RefreshFoldersAndJobs()
+    End Sub
+
+    Private Sub _s5tsbRemoveJob_Click(sender As Object, e As EventArgs) Handles _s5tsbRemoveJob.Click
+        _s5RemoveManuallyAddedJob()
     End Sub
 
     ''' <summary>

@@ -19,7 +19,7 @@ Structure CSVColumnHeader
                     Dim fieldattribute = (From i As CSVFieldAttribute In member.GetCustomAttributes(GetType(CSVFieldAttribute), False)).FirstOrDefault
                     If fieldattribute IsNot Nothing Then
                         If fieldattribute.Readable Then
-                            ColumnHeaders.Add(New CSVColumnHeader With {.CSVName = If(fieldattribute.CSVFieldName, member.Name), .Member = member})
+                            ColumnHeaders.Add(New CSVColumnHeader With {.CSVName = If(fieldattribute.AltReadName, member.Name), .Member = member})
                         End If
                     End If
                 End Sub
@@ -37,7 +37,9 @@ Structure CSVColumnHeader
                     Dim fieldattribute = (From i As CSVFieldAttribute In member.GetCustomAttributes(GetType(CSVFieldAttribute), False)).FirstOrDefault
                     If fieldattribute IsNot Nothing Then
                         If fieldattribute.Writeable Then
-                            ColumnHeaders.Add(New CSVColumnHeader With {.CSVName = If(fieldattribute.CSVFieldName, member.Name), .Member = member})
+                            Dim columnname As String = If(fieldattribute.AltReadName, member.Name)
+
+                            ColumnHeaders.Add(New CSVColumnHeader With {.CSVName = columnname, .Member = member})
                         End If
                     End If
                 End Sub
@@ -393,7 +395,7 @@ Public Class CSVFieldAttribute
     ''' <summary>
     ''' Name of the column this attribute represents. When writing, this value is case-sensitive. When reading, this value is not case-sensitive.
     ''' </summary>
-    Public CSVFieldName As String
+    Public AltReadName As String
 
     ''' <summary>
     ''' If <c>True</c>, the deserializer will look for this field. If <c>False</c>, the deserializer will not look for this field and will ignore it if present in the CSV file. The user will not be allowed to select this field in the mapping windows.
@@ -405,12 +407,13 @@ Public Class CSVFieldAttribute
     ''' </summary>
     Public Writeable As Boolean
 
-    Sub New(Optional CSVFieldName As String = Nothing, Optional Readable As Boolean = True, Optional Writeable As Boolean = True)
-        Me.CSVFieldName = CSVFieldName
+    Sub New(Optional AltReadName As String = Nothing, Optional Readable As Boolean = True, Optional Writeable As Boolean = True)
+        Me.AltReadName = AltReadName
 
         If (Readable = False) And (Writeable = False) Then
             Throw New ArgumentException("Readable and Writable cannot both be False.")
         End If
+
         Me.Readable = Readable
         Me.Writeable = Writeable
     End Sub

@@ -56,9 +56,9 @@
             Case 4
                 _s4BeginStep4()
             Case 5
-                _s4BeginStep5()
-            Case 6
-                '_s6BeginStep6()
+                _s5BeginStep5()
+                'Case 6
+                '    _s6BeginStep6()
         End Select
     End Sub
 
@@ -70,12 +70,11 @@
                     Cancel = (MsgBox("This will delete the following datasets: Enumerated Folders, Enumerated Files, Loaded Photo Metadata, Photo/Job Corellation Data. Continue?", MsgBoxStyle.Exclamation Or MsgBoxStyle.YesNo) = MsgBoxResult.No)
 
                 End If
-            Case 2
-
-            Case 3
-            Case 4
-            Case 5
-            Case 6
+                'Case 2
+                'Case 3
+                'Case 4
+                'Case 5
+                'Case 6
 
         End Select
     End Sub
@@ -259,5 +258,7 @@
         End Sub
 
     End Class
+
+
 
 End Class

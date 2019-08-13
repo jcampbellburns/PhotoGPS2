@@ -12,7 +12,7 @@ Public Class Job 'to be renamed to Dispatch in v3
     ''' <summary>
     ''' Nullable. The longitude of the job site.
     ''' </summary>
-    <CSVField(CSVFieldName:="Longitude")> Public [Long] As Double?
+    <CSVField(AltReadName:="Longitude")> Public [Long] As Double?
 
     ''' <summary>
     ''' A unique identifier for this job. Equivelent to the DispatchNumber field in Salesforce. This is used for naming folder when moving photos.
@@ -27,12 +27,17 @@ Public Class Job 'to be renamed to Dispatch in v3
     ''' <summary>
     ''' Nullable. The latitude of the job site.
     ''' </summary>
-    <CSVField(CSVFieldName:="Latitude")> Public Lat As Double?
+    <CSVField(AltReadName:="Latitude")> Public Lat As Double?
 
     ''' <summary>
     ''' A reference to an instance of <see cref="Project"/> which contains all of the instances of both <see cref="PhotoFile"/> and <see cref="Job"/> currently loaded. Similar to a DBContext model.
     ''' </summary>
     Public Project As Project
+
+    ''' <summary>
+    ''' Indicates that this job was manually added on the manual correlation scren and should not be included when exporting the CSV
+    ''' </summary>
+    Public ExcludeFromSerialization As Boolean
 
     ''' <summary>
     ''' Nullable. The first date on which work was scheduled.
@@ -81,7 +86,7 @@ Public Class Job 'to be renamed to Dispatch in v3
     ''' A <see cref="Boolean"/> indicating if this job has photos.
     ''' </summary>
     ''' <returns><c>True</c> if <see cref="PhotoCount"/> has a value greater than <c>0</c>. <c>False</c> if <see cref="PhotoCount"/> is <c>0</c> or if <see cref="Photos"/> is <c>null</c></returns>
-    <CSVField(CSVFieldName:="Photos returned?", Readable:=False, Writeable:=True)>
+    <CSVField(AltReadName:="Photos returned?", Readable:=False, Writeable:=True)>
     Public ReadOnly Property HasPhotos As Boolean
         Get
             Return PhotoCount > 0
@@ -92,7 +97,7 @@ Public Class Job 'to be renamed to Dispatch in v3
     ''' An <see cref="Integer"/> indicating the number of photos associated with this job.
     ''' </summary>
     ''' <returns>The number of photos associate with this job. If <see cref="Photos"/> is <c>null</c>, this method returns <c>0</c>.</returns>
-    <CSVField(CSVFieldName:="Photo Count", Readable:=False, Writeable:=True)> Public ReadOnly Property PhotoCount As Integer
+    <CSVField(AltReadName:="Photo Count", Readable:=False, Writeable:=True)> Public ReadOnly Property PhotoCount As Integer
         Get
             If _Photos Is Nothing Then
                 Return 0
@@ -107,7 +112,12 @@ Public Class Job 'to be renamed to Dispatch in v3
     ''' </summary>
     Public Property Photos As List(Of PhotoFile)
         Get
+            If _Photos Is Nothing Then
+                _Photos = New List(Of PhotoFile)
+            End If
+
             Return _Photos
+
         End Get
         Set(value As List(Of PhotoFile))
             _Photos = value

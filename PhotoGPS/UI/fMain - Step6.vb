@@ -128,7 +128,7 @@ Partial Public Class fMain
         End If
 
         Try
-            IO.File.WriteAllText(_s3CSVFile.FullName.EnsureFilePrepend, CSVSerializer(Of Job).Serialize(Project.Jobs))
+            IO.File.WriteAllText(_s3CSVFile.FullName.EnsureFilePrepend, CSVSerializer(Of Job).Serialize(From i In Project.Jobs Where Not i.ExcludeFromSerialization))
         Catch ex As Exception
             MsgBox(String.Format("An exception occured when trying to write to '{0}'. Please try again or select a different file. Exception type: '{1}'. Exception message: '{2}'", _s3CSVFile.Name, ex.GetType.ToString, ex.Message), MsgBoxStyle.Critical)
             Return False

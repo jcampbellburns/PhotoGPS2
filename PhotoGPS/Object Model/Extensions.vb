@@ -104,9 +104,10 @@ Module StringExtensions
     ''' </summary>
     ''' <param name="path">The path to prepend "\\?\" to, if it's not already present.</param>
     ''' <returns>The value of <c>path</c> with "\\?\" prepended to it, if it was not already prepended with "\\?\".</returns>
+    ''' <remarks>UNC network share paths beginning with "\\" are NOT affected.</remarks>
     <Extension, System.Diagnostics.DebuggerStepThrough()>
     Function EnsureFilePrepend(path As String) As String
-        Return IIf(path.StartsWith("\\?\"), path, "\\?\" & path)
+        Return IIf(path.StartsWith("\\"), path, "\\?\" & path)
     End Function
 
 End Module
