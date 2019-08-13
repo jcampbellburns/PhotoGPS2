@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PhotoGPS", "PhotoGPS\PhotoGPS.vbproj", "{94EC0C6F-401C-4339-9137-2DFF4B5F2109}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "CSVSerializer", "CSVSerializer\CSVSerializer.vbproj", "{6B19C519-E508-411C-9EE3-2ACC6C6A6B83}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94EC0C6F-401C-4339-9137-2DFF4B5F2109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94EC0C6F-401C-4339-9137-2DFF4B5F2109}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94EC0C6F-401C-4339-9137-2DFF4B5F2109}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94EC0C6F-401C-4339-9137-2DFF4B5F2109}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B19C519-E508-411C-9EE3-2ACC6C6A6B83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B19C519-E508-411C-9EE3-2ACC6C6A6B83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B19C519-E508-411C-9EE3-2ACC6C6A6B83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B19C519-E508-411C-9EE3-2ACC6C6A6B83}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C10EDACD-0C5B-4313-BDF4-6A13015CF3BE}
+	EndGlobalSection
+EndGlobal
