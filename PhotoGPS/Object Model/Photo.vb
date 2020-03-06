@@ -215,7 +215,7 @@ Public Class PhotoFile
         Dim t = ""
         Dim g = ""
         If _TakenDate.HasValue Then t = TakenDate.Value.ToString("yyyy-MM-dd HH.mm.ss")
-        If _GPS.HasValue Then g = String.Format("GPS={0}, {1}", GPS.Value.Latitude.ToString("0.000000"), GPS.Value.Longitude.ToString("0.000000"))
+        If _GPS.HasValue Then g = String.Format(" GPS={0}, {1}", GPS.Value.Latitude.ToString("0.000000"), GPS.Value.Longitude.ToString("0.000000"))
 
         Return t & g & _File.Extension
         'Return String.Join(" ", t, g, HashString & _File.Extension) ' not a typoe: HashString & _File.Extension. We don't want a space " " between those two fields.
