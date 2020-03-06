@@ -27,7 +27,6 @@ Partial Class fMain
     Friend WithEvents _s2chFolderName As ColumnHeader
     Friend WithEvents _s2chFolderPath As ColumnHeader
     Friend WithEvents _s2chGPS As ColumnHeader
-    Friend WithEvents _s2chHash As ColumnHeader
     Friend WithEvents _s2chTaken As ColumnHeader
     Friend WithEvents _s2lvEnumeratedFolders As ListView
     Friend WithEvents _s2lvPhotos As ListView
@@ -123,7 +122,6 @@ Partial Class fMain
         Me._s2chFile = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me._s2chTaken = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me._s2chGPS = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me._s2chHash = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me._s2tsbLoadPhotos = New System.Windows.Forms.ToolStripButton()
         Me._s2lvEnumeratedFolders = New System.Windows.Forms.ListView()
         Me._s2chFolderName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -412,7 +410,7 @@ Partial Class fMain
         '
         '_s2lvPhotos
         '
-        Me._s2lvPhotos.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {_s2chFolder, Me._s2chFile, Me._s2chTaken, Me._s2chGPS, Me._s2chHash})
+        Me._s2lvPhotos.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {_s2chFolder, Me._s2chFile, Me._s2chTaken, Me._s2chGPS})
         Me._s2lvPhotos.Dock = System.Windows.Forms.DockStyle.Fill
         Me._s2lvPhotos.FullRowSelect = True
         Me._s2lvPhotos.Location = New System.Drawing.Point(0, 25)
@@ -442,11 +440,6 @@ Partial Class fMain
         '
         Me._s2chGPS.Text = "GPS"
         Me._s2chGPS.Width = 104
-        '
-        '_s2chHash
-        '
-        Me._s2chHash.Text = "Hash"
-        Me._s2chHash.Width = 99
         '
         '_s2tsTopRight
         '

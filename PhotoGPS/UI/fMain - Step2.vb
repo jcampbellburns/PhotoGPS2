@@ -146,7 +146,7 @@ Partial Public Class fMain
                     GPSText = "(No GPS data)"
                 End If
 
-                lvi.Add(New ListViewItem({p.File.Directory.Name, p.File.Name, TakenDateText, GPSText, p.HashString}))
+                lvi.Add(New ListViewItem({p.File.Directory.Name, p.File.Name, TakenDateText, GPSText}))
 
                 _s0ProgressStatusbar.ReportTaskProgress("Loading photo metadata", _s2EnumeratedFiles.Count, photos.Count, False)
 

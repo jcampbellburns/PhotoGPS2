@@ -31,30 +31,30 @@ Module Util
         a.Start()
     End Sub
 
-    ''' <summary>
-    ''' Compare two arrays of <see cref="Byte"/> by treating them as <see cref="Long"/> integer arrays instead. This is significantly faster than comparing the elements of the array one at a time
-    ''' </summary>
-    ''' <param name="a1">The first byte array to compare.</param>
-    ''' <param name="a2">The second byte array to compare.</param>
-    ''' <returns><c>True</c> if the entirety of the two byte arrays exactly match. <c>False</c> if there is any degree of difference between the arrays.</returns>
-    ''' <remarks>The length of the array is compared before comparing the content of the arrays. This is done to allow different length arrays to 'short-circuit' the comparison of content.</remarks>
-    Function SequenceEqualUnsafe(ByVal a1 As Byte(), ByVal a2 As Byte()) As Boolean
+    '''' <summary>
+    '''' Compare two arrays of <see cref="Byte"/> by treating them as <see cref="Long"/> integer arrays instead. This is significantly faster than comparing the elements of the array one at a time
+    '''' </summary>
+    '''' <param name="a1">The first byte array to compare.</param>
+    '''' <param name="a2">The second byte array to compare.</param>
+    '''' <returns><c>True</c> if the entirety of the two byte arrays exactly match. <c>False</c> if there is any degree of difference between the arrays.</returns>
+    '''' <remarks>The length of the array is compared before comparing the content of the arrays. This is done to allow different length arrays to 'short-circuit' the comparison of content.</remarks>
+    'Function SequenceEqualUnsafe(ByVal a1 As Byte(), ByVal a2 As Byte()) As Boolean
 
-        If a1.Length <> a2.Length Then Return False
-        Dim longSize = CInt(Math.Floor(a1.Length / 8.0))
-        Dim long1 = Runtime.CompilerServices.Unsafe.[As](Of Long())(a1)
-        Dim long2 = Runtime.CompilerServices.Unsafe.[As](Of Long())(a2)
+    '    If a1.Length <> a2.Length Then Return False
+    '    Dim longSize = CInt(Math.Floor(a1.Length / 8.0))
+    '    Dim long1 = Runtime.CompilerServices.Unsafe.[As](Of Long())(a1)
+    '    Dim long2 = Runtime.CompilerServices.Unsafe.[As](Of Long())(a2)
 
-        For i = 0 To longSize - 1
-            If long1(i) <> long2(i) Then Return False
-        Next
+    '    For i = 0 To longSize - 1
+    '        If long1(i) <> long2(i) Then Return False
+    '    Next
 
-        For i = longSize * 8 To a1.Length - 1
-            If a1(i) <> a2(i) Then Return False
-        Next
+    '    For i = longSize * 8 To a1.Length - 1
+    '        If a1(i) <> a2(i) Then Return False
+    '    Next
 
-        Return True
-    End Function
+    '    Return True
+    'End Function
 
 End Module
 
