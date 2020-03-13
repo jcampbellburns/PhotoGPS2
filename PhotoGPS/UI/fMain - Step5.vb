@@ -219,7 +219,7 @@ Partial Public Class fMain
 
         If a IsNot Nothing Then
 
-            Start("https://burns-enviro.my.salesforce.com/_ui/search/ui/UnifiedSearchResults?searchType=2&sen=001&sen=00Q&sen=003&sen=00T&sen=a0D&sen=00U&sen=005&sen=a06&sen=006&sen=a0I&sen=00l&sen=00O&str=" & System.Web.HttpUtility.UrlEncode(a.ToString))
+            Start("https://burns-enviro.my.salesforce.com/_ui/search/ui/UnifiedSearchResults?searchType=2&sen=a1p&sen=a06&sen=00O&sen=001&sen=00Q&sen=a0B&sen=003&sen=a0A&sen=a0D&sen=00T&sen=005&sen=500&sen=00U&sen=006&sen=a0I&str=" & System.Web.HttpUtility.UrlEncode(a.ToString))
         End If
     End Sub
 

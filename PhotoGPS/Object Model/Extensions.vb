@@ -100,14 +100,16 @@ End Module
 Module StringExtensions
 
     ''' <summary>
-    ''' Ensures that a path which is passed to this function as a string is prepended precisely once with "\\?\". This is to affect a bugfix where file operation method in the <see cref="IO"/> namespace can operate on files and directories longer than 260 characters in length.
+    ''' Ensures that a path which is passed to this function as a string is prepended precisely once with "\\?\". This is to affect a bugfix where file operation methods in the <see cref="IO"/> namespace cannot operate on files and directories longer than 260 characters in length.
     ''' </summary>
     ''' <param name="path">The path to prepend "\\?\" to, if it's not already present.</param>
     ''' <returns>The value of <c>path</c> with "\\?\" prepended to it, if it was not already prepended with "\\?\".</returns>
-    ''' <remarks>UNC network share paths beginning with "\\" are NOT affected.</remarks>
+    ''' <remarks>UNC network share paths beginning with "\\" will have "\\?\UNC\" prepended as appropriate.</remarks>
     <Extension, System.Diagnostics.DebuggerStepThrough()>
     Function EnsureFilePrepend(path As String) As String
-        Return IIf(path.StartsWith("\\"), path, "\\?\" & path)
+        Return IIf(path.StartsWith("\\?\"), path, IIf(path.StartsWith("\\"), "\\?\UNC\" & path.Substring(2, path.Length - 2), "\\?\" & path))
+
+
     End Function
 
 End Module

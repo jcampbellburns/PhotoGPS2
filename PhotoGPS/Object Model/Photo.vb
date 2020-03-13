@@ -112,8 +112,9 @@ Public Class PhotoFile
             'Dim b = IO.File.ReadAllBytes(_File.FullName.EnsureFilePrepend)
             'Me._Hash = Blake2s.Blake2S.ComputeHash(b)
 
-            'Using s As New IO.MemoryStream(b), reader = New ExifLib.ExifReader(s)
-            Using reader = New ExifLib.ExifReader(_File.FullName.EnsureFilePrepend)
+            Using s = IO.File.Open(_File.FullName.EnsureFilePrepend(), IO.FileMode.Open), reader = New ExifLib.ExifReader(s)
+
+                'Using reader = New ExifLib.ExifReader(_File.FullName.EnsureFilePrepend)
                 Dim latitudeDMS As Double() = {0, 0}
                 Dim longitudeDMS As Double() = {0, 0}
                 Dim latitudeRef = String.Empty
@@ -144,6 +145,8 @@ Public Class PhotoFile
 
                 End With
 
+
+                s.Close()
             End Using
         Catch ex As ExifLibException
             'if exiflib is unable to read the file, we consider the file as not supported.
@@ -152,8 +155,8 @@ Public Class PhotoFile
         Catch ex As System.IO.EndOfStreamException
             'zero-length files are also unsupported
             Return
-        Catch ex As Exception
-            If MsgBox(String.Format("Unhandled exception reading file {0}. Exception type is {1}. Message is ""{2}"". Location is Photo.RefreshMetadata. Continue?", File.FullName, ex.GetType.ToString, ex.Message), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Throw
+            'Catch ex As Exception
+            '    If MsgBox(String.Format("Unhandled exception reading file {0}. Exception type is {1}. Message is ""{2}"". Location is Photo.RefreshMetadata. Continue?", File.FullName, ex.GetType.ToString, ex.Message), MsgBoxStyle.YesNo) = MsgBoxResult.No Then Throw
             Return
         End Try
 
